@@ -1,9 +1,22 @@
-import { After, Before, Status } from "@cucumber/cucumber";
-import { chromium, firefox, webkit } from "@playwright/test";
+import {
+  After,
+  AfterAll,
+  Before,
+  BeforeAll,
+  Status,
+  setDefaultTimeout,
+} from "@cucumber/cucumber";
+import { Browser, BrowserContext, Page, chromium, firefox, webkit } from "@playwright/test";
 import { env } from "../../src/utils/env";
 import { CustomWorld } from "./world";
 
-Before(async function (this: CustomWorld) {
+setDefaultTimeout(env.stepTimeoutMs);
+
+let sharedBrowser: Browser | undefined;
+let sharedContext: BrowserContext | undefined;
+let sharedPage: Page | undefined;
+
+BeforeAll(async function () {
   // Select Playwright engine from env, defaulting to Chromium.
   const browserType =
     env.browser === "firefox"
@@ -12,12 +25,28 @@ Before(async function (this: CustomWorld) {
         ? webkit
         : chromium;
 
-  // Fresh isolated browser context/page for each scenario run.
-  this.browser = await browserType.launch({ headless: env.headless });
-  this.context = await this.browser.newContext({
+  // Start a single browser instance for the whole test run.
+  sharedBrowser = await browserType.launch({
+    headless: env.headless,
+    slowMo: env.slowMo,
+  });
+
+  // Keep one context + one page for all scenarios in the run.
+  sharedContext = await sharedBrowser.newContext({
     viewport: { width: 1440, height: 900 },
   });
-  this.page = await this.context.newPage();
+  sharedPage = await sharedContext.newPage();
+});
+
+Before(async function (this: CustomWorld) {
+  if (!sharedBrowser || !sharedContext || !sharedPage) {
+    throw new Error("Shared browser context was not initialized in BeforeAll.");
+  }
+
+  // Reuse the same browser/context/page for the whole suite.
+  this.browser = sharedBrowser;
+  this.context = sharedContext;
+  this.page = sharedPage;
 });
 
 After(async function (this: CustomWorld, scenario) {
@@ -27,7 +56,18 @@ After(async function (this: CustomWorld, scenario) {
     this.attach(screenshot, "image/png");
   }
 
-  // Always release resources to avoid cross-scenario leakage.
-  await this.context?.close();
-  await this.browser?.close();
+  // Context/page are intentionally kept alive until AfterAll.
+});
+
+AfterAll(async function () {
+  // Keep browser visible for observation before teardown.
+  if (env.holdBrowserMs > 0) {
+    await new Promise((resolve) => setTimeout(resolve, env.holdBrowserMs));
+  }
+
+  await sharedContext?.close();
+  await sharedBrowser?.close();
+  sharedPage = undefined;
+  sharedContext = undefined;
+  sharedBrowser = undefined;
 });

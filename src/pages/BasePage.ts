@@ -1,4 +1,4 @@
-import { expect, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 
 export class BasePage {
   protected constructor(protected readonly page: Page) {}
@@ -27,5 +27,15 @@ export class BasePage {
     await expect(
       this.page.getByText(text, { exact: false }).first(),
     ).toBeVisible();
+  }
+
+  // Smoothly scroll to a locator so movement is visible during headed runs.
+  async smoothScrollTo(locator: Locator, holdMs = 800): Promise<void> {
+    const target = locator.first();
+    await target.waitFor({ state: "attached" });
+    await target.evaluate((node) => {
+      node.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+    await this.page.waitForTimeout(holdMs);
   }
 }

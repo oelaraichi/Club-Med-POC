@@ -31,11 +31,14 @@ export class HomePage extends BasePage {
 
   // Verify that both App Store and Google Play links are visible.
   async expectStoreLinksVisible(): Promise<void> {
-    await expect(
-      this.page.locator(homeLocators.appStoreLink).first(),
-    ).toBeVisible();
-    await expect(
-      this.page.locator(homeLocators.googlePlayLink).first(),
-    ).toBeVisible();
+    const appStoreLink = this.page.locator(homeLocators.appStoreLink).first();
+    const googlePlayLink = this.page
+      .locator(homeLocators.googlePlayLink)
+      .first();
+
+    await this.smoothScrollTo(appStoreLink, 1000);
+    await expect(appStoreLink).toBeVisible();
+    await this.smoothScrollTo(googlePlayLink, 700);
+    await expect(googlePlayLink).toBeVisible();
   }
 }
