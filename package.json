@@ -1,0 +1,41 @@
+{
+  "name": "clubmed-qa-poc",
+  "version": "1.0.0",
+  "description": "POC QA Automation for Club Med App landing page using Playwright, Gherkin, CircleCI and Allure Report.",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js",
+    "test:headed": "PW_HEADLESS=false cucumber-js",
+    "test:debug": "PWDEBUG=1 PW_HEADLESS=false cucumber-js",
+    "test:smoke": "cucumber-js --tags @smoke",
+    "allure:generate": "allure generate reports/allure-results --clean -o reports/allure-report",
+    "allure:open": "allure open reports/allure-report",
+    "allure:serve": "allure serve reports/allure-results",
+    "report": "npm run allure:generate",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "qa",
+    "automation",
+    "playwright",
+    "cucumber",
+    "gherkin",
+    "allure",
+    "circleci"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@cucumber/cucumber": "^11.2.0",
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.21",
+    "allure-commandline": "^2.34.0",
+    "allure-cucumberjs": "^3.2.1",
+    "dotenv": "^16.5.0",
+    "eslint": "^9.27.0",
+    "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}

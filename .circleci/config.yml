@@ -1,0 +1,43 @@
+version: 2.1
+
+jobs:
+  qa-tests:
+    docker:
+      - image: cimg/node:22.11-browsers
+    working_directory: ~/clubmed-qa-poc
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - npm-cache-{{ checksum "package-lock.json" }}
+            - npm-cache-
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - save_cache:
+          key: npm-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+      - run:
+          name: Install Playwright browsers
+          command: npx playwright install --with-deps chromium
+      - run:
+          name: Run Cucumber Playwright tests
+          command: npm run test
+      - run:
+          name: Generate Allure report
+          command: npm run allure:generate
+          when: always
+      - store_artifacts:
+          path: reports/allure-report
+          destination: allure-report
+      - store_artifacts:
+          path: reports/allure-results
+          destination: allure-results
+      - store_test_results:
+          path: reports
+
+workflows:
+  qa-automation:
+    jobs:
+      - qa-tests
