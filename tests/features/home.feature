@@ -1,4 +1,4 @@
-@smoke @home
+﻿@smoke @home
 Feature: Page My Club Med App
   En tant qu'utilisateur Club Med
   Je veux consulter la page My Club Med App
@@ -8,6 +8,7 @@ Feature: Page My Club Med App
     Given je suis sur la page My Club Med App
     Then la page My Club Med App est affichée correctement
 
+  @regression @download
   Scenario: Vérifier les liens de téléchargement de l'application
     Given je suis sur la page My Club Med App
     Then la section de téléchargement est visible
