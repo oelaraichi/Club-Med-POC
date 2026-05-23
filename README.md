@@ -1,19 +1,18 @@
 # Club Med App QA POC
 
-Automatisation QA basique pour la page **My Club Med App**.
+Automatisation QA pour la page **My Club Med App** avec Playwright + Cucumber.
 
 ## Objectif
 
-V�rifier que la page se charge et que les liens de t�l�chargement vers l'App Store et Google Play sont visibles.
+Verifier que la page se charge et que les liens App Store / Google Play sont visibles.
 
-## Architecture utilis�e
+## Stack
 
-- **Cucumber** pour les sc�narios BDD (`tests/features/*.feature`, `tests/step-definitions/*.ts`)
-- **Playwright** pour piloter le navigateur et v�rifier l'interface
-- **Page Object Model** pour s�parer la logique de page (`src/pages`) des helpers (`src/functions`)
-- **Allure** pour g�n�rer un rapport de test clair
+- `@cucumber/cucumber` pour les scenarios BDD
+- `@playwright/test` pour piloter le navigateur
+- `allure-cucumberjs` pour le reporting
 
-Structure principale :
+## Arborescence
 
 ```text
 src/
@@ -26,30 +25,91 @@ tests/
   step-definitions/
   hooks/
 cucumber.js
-README.md
 package.json
+README.md
 ```
 
-## Installation
+## Commandes a lancer
+
+### 1) Installation initiale
 
 ```powershell
 npm install
-npx playwright install --with-deps chromium
+npx playwright install
 ```
 
-## Ex�cution des tests
+### 2) Tests
 
 ```powershell
-npm test
+# Tous les tests (headless)
+npm run test
+
+# Tests smoke uniquement
+npm run test:smoke
+
+# Tests visibles (navigateur ouvert + ralenti + pause finale)
+npm run test:headed
+
+# Tests visibles (ralenti moyen)
+npm run test:observe
+
+# Tests visibles (ralenti fort + pause finale)
+npm run test:observe:slow
+
+# Mode debug Playwright
+npm run test:debug
 ```
 
-## Rapport Allure
+### 3) Qualite code
 
 ```powershell
+# Lint
+npm run lint
+
+# Formatage
+npm run format
+
+# Verification TypeScript
+npx tsc --noEmit
+```
+
+### 4) Rapports Allure
+
+```powershell
+# Generer le rapport
 npm run allure:generate
+
+# Alias de generation
+npm run report
+
+# Ouvrir un rapport deja genere
 npm run allure:open
+
+# Generer + servir en local
+npm run allure:serve
 ```
 
-## Page test�e
+### 5) Cucumber direct (optionnel)
+
+```powershell
+# Filtrer par tag
+npx cucumber-js --tags "@download"
+
+# Resume execution
+npx cucumber-js --format summary
+```
+
+## Variables d'environnement utiles
+
+```powershell
+# PowerShell (session courante)
+$env:PW_HEADLESS="false"
+$env:PW_SLOW_MO="1200"
+$env:PW_HOLD_BROWSER_MS="10000"
+$env:CUCUMBER_TIMEOUT_MS="30000"
+$env:BROWSER="chromium"
+```
+
+## Page testee
 
 https://www.clubmed.fr/l/my-club-med-app
