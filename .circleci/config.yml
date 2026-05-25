@@ -23,7 +23,7 @@ jobs:
           command: npx playwright install --with-deps chromium
       - run:
           name: Run Cucumber Playwright tests
-          command: npm run test
+          command: PW_HEADLESS=true PW_SLOW_MO=0 PW_HOLD_BROWSER_MS=0 npm run test
       - run:
           name: Generate Allure report
           command: npm run allure:generate

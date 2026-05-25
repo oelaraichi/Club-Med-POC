@@ -29,6 +29,20 @@ package.json
 README.md
 ```
 
+## Architecture professionnelle
+
+### 1) Vue systeme globale
+
+![QA System Architecture](docs/architecture/system-architecture.svg)
+
+### 2) Flux d'execution detaille
+
+![Execution Flow](docs/architecture/execution-flow.svg)
+
+### 3) Architecture pipeline CircleCI
+
+![CircleCI Pipeline](docs/architecture/circleci-pipeline.svg)
+
 ## Commandes a lancer
 
 ### 1) Installation initiale
@@ -41,7 +55,10 @@ npx playwright install
 ### 2) Tests
 
 ```powershell
-# Tous les tests (headless)
+# Important: `npm run` tout seul n'execute pas les tests.
+# Utiliser une commande cible:
+
+# Tous les tests (mode visible avec navigateur) + generation automatique du rapport Allure
 npm run test
 
 # Tests smoke uniquement
@@ -59,6 +76,8 @@ npm run test:observe:slow
 # Mode debug Playwright
 npm run test:debug
 ```
+
+Apres chaque commande ci-dessus, le rapport HTML est regenere dans `reports/allure-report/index.html`.
 
 ### 3) Qualite code
 

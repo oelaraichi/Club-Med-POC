@@ -1,12 +1,11 @@
-export const homeLocators = {
+﻿export const homeLocators = {
   mainHeading: "h1",
-  downloadSectionByText: "text=Télécharger",
-  appStoreLink: 'a:has-text("App Store")',
-  googlePlayLink: 'a:has-text("Google Play")',
+  appStoreLink: 'a[href="https://apps.apple.com/fr/app/my-club-med/id900913496"]',
+  googlePlayLink:
+    'a[href="https://play.google.com/store/apps/details?id=com.myhappydays.clubmed&hl=fr"]',
   cookieConsentButton: [
+    "#didomi-notice-agree-button",
+    'button:has-text("Accepter et continuer")',
     'button:has-text("Accepter")',
-    'button:has-text("Tout accepter")',
-    'button:has-text("Continuer sans accepter")',
-    "#onetrust-accept-btn-handler",
   ],
 };

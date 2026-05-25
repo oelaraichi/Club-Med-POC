@@ -1,0 +1,129 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Execution Flow - From Feature to Allure</title>
+  <desc id="desc">Detailed execution flow of tests from Gherkin feature to CircleCI artifact publication.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .title { font: 700 40px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 20px 'Segoe UI', Tahoma, sans-serif; fill: #334155; }
+      .swimlane { fill: #ffffff; stroke: #d7e0eb; stroke-width: 2; rx: 16; }
+      .swim-title { font: 700 18px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+      .step { fill: #ffffff; stroke: #99b3d9; stroke-width: 2; rx: 12; }
+      .step-title { font: 700 16px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+      .step-text { font: 500 14px 'Consolas', 'Courier New', monospace; fill: #1e293b; }
+      .num { fill: #1d4ed8; }
+      .num-text { font: 700 14px 'Segoe UI', Tahoma, sans-serif; fill: #ffffff; }
+      .line { stroke: #334155; stroke-width: 2.1; fill: none; }
+      .arrow { fill: #334155; }
+      .local { fill: #ecfeff; }
+      .runtime { fill: #f0fdf4; }
+      .report { fill: #fff7ed; }
+      .ci { fill: #f5f3ff; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1800" height="1200"/>
+  <text class="title" x="900" y="62" text-anchor="middle">Detailed Execution Flow</text>
+  <text class="subtitle" x="900" y="95" text-anchor="middle">From Gherkin scenario to local and CI Allure reports</text>
+
+  <rect class="swimlane" x="60" y="130" width="390" height="1000" rx="16"/>
+  <text class="swim-title" x="255" y="165" text-anchor="middle">Specification</text>
+
+  <rect class="swimlane" x="470" y="130" width="390" height="1000" rx="16"/>
+  <text class="swim-title" x="665" y="165" text-anchor="middle">Automation Runtime</text>
+
+  <rect class="swimlane" x="880" y="130" width="390" height="1000" rx="16"/>
+  <text class="swim-title" x="1075" y="165" text-anchor="middle">Reporting</text>
+
+  <rect class="swimlane" x="1290" y="130" width="450" height="1000" rx="16"/>
+  <text class="swim-title" x="1515" y="165" text-anchor="middle">CircleCI Pipeline</text>
+
+  <rect class="step local" x="90" y="210" width="330" height="110" rx="12"/>
+  <circle class="num" cx="115" cy="235" r="14"/><text class="num-text" x="115" y="240" text-anchor="middle">1</text>
+  <text class="step-title" x="245" y="242" text-anchor="middle">Define Scenario</text>
+  <text class="step-text" x="110" y="272">tests/features/home.feature</text>
+  <text class="step-text" x="110" y="296">Given / When / Then + tags</text>
+
+  <rect class="step local" x="90" y="360" width="330" height="120" rx="12"/>
+  <circle class="num" cx="115" cy="387" r="14"/><text class="num-text" x="115" y="392" text-anchor="middle">2</text>
+  <text class="step-title" x="245" y="394" text-anchor="middle">Map Steps to Code</text>
+  <text class="step-text" x="110" y="424">tests/step-definitions/*.ts</text>
+  <text class="step-text" x="110" y="448">Glue between Gherkin and TS logic</text>
+
+  <rect class="step runtime" x="500" y="260" width="330" height="120" rx="12"/>
+  <circle class="num" cx="525" cy="287" r="14"/><text class="num-text" x="525" y="292" text-anchor="middle">3</text>
+  <text class="step-title" x="655" y="294" text-anchor="middle">Start Cucumber Runner</text>
+  <text class="step-text" x="520" y="324">npm run test</text>
+  <text class="step-text" x="520" y="348">cucumber.js + ts-node/register</text>
+
+  <rect class="step runtime" x="500" y="420" width="330" height="130" rx="12"/>
+  <circle class="num" cx="525" cy="447" r="14"/><text class="num-text" x="525" y="452" text-anchor="middle">4</text>
+  <text class="step-title" x="655" y="454" text-anchor="middle">Initialize Test Context</text>
+  <text class="step-text" x="520" y="484">tests/hooks/hooks.ts + world.ts</text>
+  <text class="step-text" x="520" y="508">Browser, context, page lifecycle</text>
+
+  <rect class="step runtime" x="500" y="590" width="330" height="150" rx="12"/>
+  <circle class="num" cx="525" cy="617" r="14"/><text class="num-text" x="525" y="622" text-anchor="middle">5</text>
+  <text class="step-title" x="655" y="624" text-anchor="middle">Execute Playwright Actions</text>
+  <text class="step-text" x="520" y="654">src/pages/*.ts (Page Objects)</text>
+  <text class="step-text" x="520" y="678">src/locators/*.ts</text>
+  <text class="step-text" x="520" y="702">src/functions/*.ts reusable actions</text>
+
+  <rect class="step report" x="910" y="330" width="330" height="130" rx="12"/>
+  <circle class="num" cx="935" cy="357" r="14"/><text class="num-text" x="935" y="362" text-anchor="middle">6</text>
+  <text class="step-title" x="1065" y="364" text-anchor="middle">Collect Test Events</text>
+  <text class="step-text" x="930" y="394">allure-cucumberjs formatter</text>
+  <text class="step-text" x="930" y="418">reports/allure-results/*</text>
+
+  <rect class="step report" x="910" y="500" width="330" height="120" rx="12"/>
+  <circle class="num" cx="935" cy="527" r="14"/><text class="num-text" x="935" y="532" text-anchor="middle">7</text>
+  <text class="step-title" x="1065" y="534" text-anchor="middle">Build HTML Report</text>
+  <text class="step-text" x="930" y="564">npm run allure:generate</text>
+  <text class="step-text" x="930" y="588">reports/allure-report/*</text>
+
+  <rect class="step report" x="910" y="660" width="330" height="120" rx="12"/>
+  <circle class="num" cx="935" cy="687" r="14"/><text class="num-text" x="935" y="692" text-anchor="middle">8</text>
+  <text class="step-title" x="1065" y="694" text-anchor="middle">Inspect Locally</text>
+  <text class="step-text" x="930" y="724">npm run allure:open</text>
+  <text class="step-text" x="930" y="748">or npm run allure:serve</text>
+
+  <rect class="step ci" x="1320" y="250" width="390" height="150" rx="12"/>
+  <circle class="num" cx="1345" cy="277" r="14"/><text class="num-text" x="1345" y="282" text-anchor="middle">9</text>
+  <text class="step-title" x="1515" y="284" text-anchor="middle">CircleCI Bootstrap</text>
+  <text class="step-text" x="1340" y="314">checkout + npm cache restore</text>
+  <text class="step-text" x="1340" y="338">npm ci</text>
+  <text class="step-text" x="1340" y="362">playwright install chromium</text>
+
+  <rect class="step ci" x="1320" y="440" width="390" height="140" rx="12"/>
+  <circle class="num" cx="1345" cy="467" r="14"/><text class="num-text" x="1345" y="472" text-anchor="middle">10</text>
+  <text class="step-title" x="1515" y="474" text-anchor="middle">Run Test and Report</text>
+  <text class="step-text" x="1340" y="504">npm run test</text>
+  <text class="step-text" x="1340" y="528">npm run allure:generate (always)</text>
+
+  <rect class="step ci" x="1320" y="620" width="390" height="160" rx="12"/>
+  <circle class="num" cx="1345" cy="647" r="14"/><text class="num-text" x="1345" y="652" text-anchor="middle">11</text>
+  <text class="step-title" x="1515" y="654" text-anchor="middle">Publish Evidence</text>
+  <text class="step-text" x="1340" y="684">store_artifacts allure-report</text>
+  <text class="step-text" x="1340" y="708">store_artifacts allure-results</text>
+  <text class="step-text" x="1340" y="732">store_test_results reports/</text>
+
+  <path class="line" d="M420 265 L500 310"/><polygon class="arrow" points="490,311 500,310 495,302"/>
+  <path class="line" d="M420 420 L500 460"/><polygon class="arrow" points="490,461 500,460 495,452"/>
+  <path class="line" d="M665 380 L665 420"/><polygon class="arrow" points="659,412 665,420 671,412"/>
+  <path class="line" d="M665 550 L665 590"/><polygon class="arrow" points="659,582 665,590 671,582"/>
+
+  <path class="line" d="M830 655 L910 395"/><polygon class="arrow" points="901,398 910,395 905,387"/>
+  <path class="line" d="M1075 460 L1075 500"/><polygon class="arrow" points="1069,492 1075,500 1081,492"/>
+  <path class="line" d="M1075 620 L1075 660"/><polygon class="arrow" points="1069,652 1075,660 1081,652"/>
+
+  <path class="line" d="M1240 560 L1320 510"/><polygon class="arrow" points="1310,512 1320,510 1315,502"/>
+  <path class="line" d="M1515 400 L1515 440"/><polygon class="arrow" points="1509,432 1515,440 1521,432"/>
+  <path class="line" d="M1515 580 L1515 620"/><polygon class="arrow" points="1509,612 1515,620 1521,612"/>
+
+  <rect class="step" x="90" y="860" width="1620" height="220" rx="12"/>
+  <text class="step-title" x="900" y="898" text-anchor="middle">Quality gates built into the flow</text>
+  <text class="step-text" x="120" y="936">- Any failed assertion in Playwright marks the scenario failed and propagates non-zero exit code.</text>
+  <text class="step-text" x="120" y="964">- Allure results are still generated to preserve diagnostics for failed runs.</text>
+  <text class="step-text" x="120" y="992">- CircleCI publishes artifacts every run to keep execution evidence auditable.</text>
+  <text class="step-text" x="120" y="1020">- Same command path local and CI reduces environment drift (developer parity).</text>
+</svg>

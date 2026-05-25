@@ -1,0 +1,90 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1000" viewBox="0 0 1800 1000" role="img" aria-labelledby="title desc">
+  <title id="title">CircleCI QA Pipeline Architecture</title>
+  <desc id="desc">Professional view of the CircleCI workflow, job stages, dependencies, and generated artifacts.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f6f8fc; }
+      .title { font: 700 38px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 19px 'Segoe UI', Tahoma, sans-serif; fill: #334155; }
+      .lane { fill: #ffffff; stroke: #d8e1ee; stroke-width: 2; rx: 16; }
+      .lane-title { font: 700 20px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+      .stage { fill: #ffffff; stroke: #93b4e7; stroke-width: 2; rx: 12; }
+      .stage-title { font: 700 16px 'Segoe UI', Tahoma, sans-serif; fill: #0f172a; }
+      .stage-text { font: 500 14px 'Consolas', 'Courier New', monospace; fill: #1e293b; }
+      .infra { fill: #eaf3ff; }
+      .build { fill: #ecfdf5; }
+      .test { fill: #fff7ed; }
+      .report { fill: #f5f3ff; }
+      .artifact { fill: #fef2f2; stroke: #ef4444; }
+      .line { stroke: #334155; stroke-width: 2.1; fill: none; }
+      .arrow { fill: #334155; }
+      .note { font: 600 13px 'Segoe UI', Tahoma, sans-serif; fill: #475569; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1800" height="1000"/>
+  <text class="title" x="900" y="56" text-anchor="middle">CircleCI Pipeline Architecture</text>
+  <text class="subtitle" x="900" y="88" text-anchor="middle">workflow qa-automation -> job qa-tests</text>
+
+  <rect class="lane" x="60" y="120" width="1680" height="660" rx="16"/>
+  <text class="lane-title" x="90" y="156">Execution Stages</text>
+
+  <rect class="stage infra" x="100" y="200" width="260" height="220" rx="12"/>
+  <text class="stage-title" x="230" y="236" text-anchor="middle">Stage 1: Checkout</text>
+  <text class="stage-text" x="120" y="268">- checkout source code</text>
+  <text class="stage-text" x="120" y="296">- attach working directory</text>
+  <text class="stage-text" x="120" y="324">~/clubmed-qa-poc</text>
+  <text class="stage-text" x="120" y="352">- Docker image ready:</text>
+  <text class="stage-text" x="120" y="380">cimg/node:22.11-browsers</text>
+
+  <rect class="stage build" x="390" y="200" width="300" height="220" rx="12"/>
+  <text class="stage-title" x="540" y="236" text-anchor="middle">Stage 2: Dependencies</text>
+  <text class="stage-text" x="410" y="268">- restore_cache ~/.npm</text>
+  <text class="stage-text" x="410" y="296">- npm ci</text>
+  <text class="stage-text" x="410" y="324">- save_cache ~/.npm</text>
+  <text class="stage-text" x="410" y="352">cache key checksum:</text>
+  <text class="stage-text" x="410" y="380">package-lock.json</text>
+
+  <rect class="stage build" x="720" y="200" width="300" height="220" rx="12"/>
+  <text class="stage-title" x="870" y="236" text-anchor="middle">Stage 3: Browser Setup</text>
+  <text class="stage-text" x="740" y="268">- npx playwright install</text>
+  <text class="stage-text" x="740" y="296">--with-deps chromium</text>
+  <text class="stage-text" x="740" y="324">- ensures deterministic</text>
+  <text class="stage-text" x="740" y="352">browser runtime in CI</text>
+
+  <rect class="stage test" x="1050" y="200" width="300" height="220" rx="12"/>
+  <text class="stage-title" x="1200" y="236" text-anchor="middle">Stage 4: Test Execution</text>
+  <text class="stage-text" x="1070" y="268">- npm run test</text>
+  <text class="stage-text" x="1070" y="296">(Cucumber + Playwright)</text>
+  <text class="stage-text" x="1070" y="324">- generates allure-results</text>
+  <text class="stage-text" x="1070" y="352">- non-zero exit on failures</text>
+
+  <rect class="stage report" x="1380" y="200" width="320" height="220" rx="12"/>
+  <text class="stage-title" x="1540" y="236" text-anchor="middle">Stage 5: Allure Build</text>
+  <text class="stage-text" x="1400" y="268">- npm run allure:generate</text>
+  <text class="stage-text" x="1400" y="296">- when: always</text>
+  <text class="stage-text" x="1400" y="324">- output allure HTML report</text>
+  <text class="stage-text" x="1400" y="352">even when tests fail</text>
+
+  <rect class="stage artifact" x="250" y="500" width="1300" height="240" rx="12"/>
+  <text class="stage-title" x="900" y="536" text-anchor="middle">Artifact Publishing and Traceability</text>
+  <text class="stage-text" x="280" y="570">- store_artifacts: reports/allure-report -> destination: allure-report</text>
+  <text class="stage-text" x="280" y="600">- store_artifacts: reports/allure-results -> destination: allure-results</text>
+  <text class="stage-text" x="280" y="630">- store_test_results: reports/</text>
+  <text class="stage-text" x="280" y="660">- Outcome: each pipeline run keeps downloadable evidence for audit and debugging</text>
+  <text class="stage-text" x="280" y="690">- Consumers: QA, developers, release managers</text>
+
+  <path class="line" d="M360 310 L390 310"/><polygon class="arrow" points="382,304 390,310 382,316"/>
+  <path class="line" d="M690 310 L720 310"/><polygon class="arrow" points="712,304 720,310 712,316"/>
+  <path class="line" d="M1020 310 L1050 310"/><polygon class="arrow" points="1042,304 1050,310 1042,316"/>
+  <path class="line" d="M1350 310 L1380 310"/><polygon class="arrow" points="1372,304 1380,310 1372,316"/>
+
+  <path class="line" d="M1540 420 L1540 500"/><polygon class="arrow" points="1534,492 1540,500 1546,492"/>
+  <path class="line" d="M1200 420 L1200 500"/><polygon class="arrow" points="1194,492 1200,500 1206,492"/>
+
+  <rect class="lane" x="60" y="810" width="1680" height="150" rx="16"/>
+  <text class="lane-title" x="90" y="846">Operational Guarantees</text>
+  <text class="note" x="100" y="878">- Reproducibility: fixed CI image + explicit Playwright install</text>
+  <text class="note" x="100" y="904">- Observability: results and HTML report published as artifacts every run</text>
+  <text class="note" x="100" y="930">- Reliability: report generation uses when: always to preserve diagnostics on failing tests</text>
+</svg>

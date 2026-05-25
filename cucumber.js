@@ -3,7 +3,7 @@ module.exports = {
     requireModule: ["ts-node/register"],
     require: ["tests/hooks/**/*.ts", "tests/step-definitions/**/*.ts"],
     paths: ["tests/features/**/*.feature"],
-    format: ["progress-bar", "allure-cucumberjs/reporter"],
+    format: ["summary", "allure-cucumberjs/reporter"],
     formatOptions: {
       resultsDir: "reports/allure-results",
     },
