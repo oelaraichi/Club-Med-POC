@@ -1,5 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
 
+// Shared primitives reused by page objects to keep steps concise.
 export class BasePage {
   protected constructor(protected readonly page: Page) {}
 
@@ -10,6 +11,7 @@ export class BasePage {
 
   // Accept cookies if a consent button is visible on the page.
   async acceptCookiesIfVisible(selectors: string[]): Promise<void> {
+    // Try selectors in order because cookie banners vary by locale/variant.
     for (const selector of selectors) {
       const button = this.page.locator(selector).first();
       const isVisible = await button

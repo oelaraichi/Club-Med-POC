@@ -3,6 +3,7 @@ import { BasePage } from "./BasePage";
 import { homeLocators } from "../locators/home.locators";
 import { appData } from "../utils/testData";
 
+// Page object encapsulating assertions/actions on My Club Med App landing page.
 export class HomePage extends BasePage {
   constructor(page: Page) {
     super(page);
@@ -36,6 +37,7 @@ export class HomePage extends BasePage {
       .locator(homeLocators.googlePlayLink)
       .first();
 
+    // Explicit scrolling makes the journey visible in headed/observe runs.
     await this.smoothScrollTo(appStoreLink, 1000);
     await expect(appStoreLink).toBeVisible();
     await this.smoothScrollTo(googlePlayLink, 700);
