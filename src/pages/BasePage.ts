@@ -9,18 +9,35 @@ export class BasePage {
     await this.page.goto(url, { waitUntil: "domcontentloaded" });
   }
 
-  // Accept cookies if a consent button is visible on the page.
-  async acceptCookiesIfVisible(selectors: string[]): Promise<void> {
-    // Try selectors in order because cookie banners vary by locale/variant.
-    for (const selector of selectors) {
-      const button = this.page.locator(selector).first();
-      const isVisible = await button
-        .isVisible({ timeout: 1500 })
-        .catch(() => false);
-      if (isVisible) {
-        await button.click();
-        return;
+  // Accept cookies as soon as a consent button appears.
+  async acceptCookiesIfVisible(
+    selectors: string[],
+    timeoutMs = 5000,
+    preClickDelayMs = 700,
+    postClickDelayMs = 500,
+  ): Promise<void> {
+    const deadline = Date.now() + timeoutMs;
+
+    while (Date.now() < deadline) {
+      // Try selectors in order because cookie banners vary by locale/variant.
+      for (const selector of selectors) {
+        const button = this.page.locator(selector).first();
+        const isVisible = await button.isVisible().catch(() => false);
+        if (isVisible) {
+          // Keep a short visual pause so cookie click is clearly observable.
+          if (preClickDelayMs > 0) {
+            await this.page.waitForTimeout(preClickDelayMs);
+          }
+          await button.click({ timeout: 1000 });
+          if (postClickDelayMs > 0) {
+            await this.page.waitForTimeout(postClickDelayMs);
+          }
+          return;
+        }
       }
+
+      // Short polling interval so click happens quickly when banner appears.
+      await this.page.waitForTimeout(100);
     }
   }
 
